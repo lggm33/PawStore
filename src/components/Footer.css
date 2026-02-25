@@ -1,0 +1,21 @@
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 100px;
+  border-top: 1px solid #ccc;
+  height: 64px;
+}
+
+.footer-container-right {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-container-right a {
+  text-decoration: none;
+  color: #666;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+}
