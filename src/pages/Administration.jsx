@@ -25,11 +25,11 @@ function ProductTable({ products, navigate, onDelete }) {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Category</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Categoría</th>
               <th>Stock</th>
-              <th>Actions</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -101,23 +101,23 @@ function AddProductForm({ onAdd }) {
       <h2>Agregar nuevo producto</h2>
       <form className="admin-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Nombre</label>
           <input
             id="name"
             name="name"
             type="text"
-            placeholder="Name of the product"
+            placeholder="Nombre del producto"
             value={formData.name}
             onChange={handleChange}
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">Descripción</label>
           <textarea
             id="description"
             name="description"
-            placeholder="Description of the product"
+            placeholder="Descripción del producto"
             value={formData.description}
             onChange={handleChange}
             rows={3}
@@ -126,25 +126,25 @@ function AddProductForm({ onAdd }) {
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="price">Price</label>
+            <label htmlFor="price">Precio</label>
             <input
               id="price"
               name="price"
               type="number"
-              placeholder="0.00"
+              placeholder="0,00"
               min="0"
               step="0.01"
-              value={formData.precio}
+              value={formData.price}
               onChange={handleChange}
             />
           </div>
           <div className="form-group">
-            <label htmlFor="category">Category</label>
+            <label htmlFor="category">Categoría</label>
             <input
               id="category"
               name="category"
               type="text"
-              placeholder="Category of the product (e.g. Food, Toys)"
+              placeholder="Categoría del producto (ej. Alimento, Juguetes)"
               value={formData.category}
               onChange={handleChange}
             />
@@ -152,7 +152,7 @@ function AddProductForm({ onAdd }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="image">URL of the image</label>
+          <label htmlFor="image">URL de la imagen</label>
           <input
             id="image"
             name="image"
@@ -177,7 +177,7 @@ function AddProductForm({ onAdd }) {
         </div>
 
         <button type="submit" className="btn-add-product">
-          Add product
+          Agregar producto
         </button>
 
         {error && <p className="form-error">{error}</p>}

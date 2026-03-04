@@ -16,11 +16,11 @@ function EditProduct({ productId, navigate }) {
       return null
     }
     return {
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      category: product.category,
-      image: product.image,
+      name: product.nombre,
+      description: product.descripcion,
+      price: product.precio,
+      category: product.categoria,
+      image: product.imagen,
       stock: product.stock,
     }
   })
@@ -46,7 +46,7 @@ function EditProduct({ productId, navigate }) {
     e.preventDefault()
 
     if (hasEmptyFields()) {
-      setError('Please fill in all fields before saving the changes.')
+      setError('Por favor completa todos los campos antes de guardar los cambios.')
       return
     }
 
@@ -67,13 +67,13 @@ function EditProduct({ productId, navigate }) {
     <>
       <Header currentPage="edit" navigate={navigate} />
       <main className="edit-product-container">
-        <h1>Edit product</h1>
+        <h1>Editar producto</h1>
         <div className="edit-product-card">
           {error && <p className="form-error">{error}</p>}
 
           <form className="edit-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">Nombre</label>
               <input
                 id="name"
                 name="name"
@@ -84,7 +84,7 @@ function EditProduct({ productId, navigate }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="description">Descripción</label>
               <textarea
                 id="description"
                 name="description"
@@ -95,7 +95,7 @@ function EditProduct({ productId, navigate }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="price">Price</label>
+              <label htmlFor="price">Precio</label>
               <input
                 id="price"
                 name="price"
@@ -108,7 +108,7 @@ function EditProduct({ productId, navigate }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="category">Category</label>
+              <label htmlFor="category">Categoría</label>
               <select
                 id="category"
                 name="category"
@@ -124,7 +124,7 @@ function EditProduct({ productId, navigate }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="image">URL of the image</label>
+              <label htmlFor="image">URL de la imagen</label>
               <input
                 id="image"
                 name="image"
@@ -152,10 +152,10 @@ function EditProduct({ productId, navigate }) {
                 className="btn-cancel"
                 onClick={handleCancel}
               >
-                Cancel
+                Cancelar
               </button>
               <button type="submit" className="btn-save">
-                Save changes
+                Guardar cambios
               </button>
             </div>
           </form>
