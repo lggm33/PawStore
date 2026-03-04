@@ -36,14 +36,15 @@ header h1 {
 
 nav {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 16px;
 }
 
 nav a {
   text-decoration: none;
-  font-size: 16px;
-  font-weight: 600;
-  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
 }
 
 nav a:hover {
@@ -51,6 +52,20 @@ nav a:hover {
 }
 
 nav a.link-active {
-  color: #36E270FF;
-  font-weight: 700;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.nav-admin-btn {
+  background-color: var(--button-action-color);
+  color: white !important;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600 !important;
+  transition: opacity 0.2s;
+}
+
+.nav-admin-btn:hover {
+  opacity: 0.85;
+  color: white !important;
 }
