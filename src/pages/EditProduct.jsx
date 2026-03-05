@@ -9,18 +9,18 @@ function EditProduct({ productId, navigate }) {
   const updateProduct = useProductStore((state) => state.updateProduct)
 
   const product = products.find((p) => p.id === productId)
-  const categories = [...new Set(products.map((p) => p.category))]
+  const categories = [...new Set(products.map((p) => p.categoria))]
 
   const [formData, setFormData] = useState(() => {
     if (!product) {
       return null
     }
     return {
-      name: product.nombre,
-      description: product.descripcion,
-      price: product.precio,
-      category: product.categoria,
-      image: product.imagen,
+      nombre: product.nombre,
+      descripcion: product.descripcion,
+      precio: product.precio,
+      categoria: product.categoria,
+      imagen: product.imagen,
       stock: product.stock,
     }
   })
@@ -51,8 +51,11 @@ function EditProduct({ productId, navigate }) {
     }
 
     updateProduct(productId, {
-      ...formData,
-      price: Number(formData.price),
+      nombre: formData.nombre,
+      descripcion: formData.descripcion,
+      precio: Number(formData.precio),
+      categoria: formData.categoria,
+      imagen: formData.imagen,
       stock: Number(formData.stock),
     })
 
@@ -73,46 +76,46 @@ function EditProduct({ productId, navigate }) {
 
           <form className="edit-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Nombre</label>
+              <label htmlFor="nombre">Nombre</label>
               <input
-                id="name"
-                name="name"
+                id="nombre"
+                name="nombre"
                 type="text"
-                value={formData.name}
+                value={formData.nombre}
                 onChange={handleChange}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="description">Descripción</label>
+              <label htmlFor="descripcion">Descripción</label>
               <textarea
-                id="description"
-                name="description"
-                value={formData.description}
+                id="descripcion"
+                name="descripcion"
+                value={formData.descripcion}
                 onChange={handleChange}
                 rows={3}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="price">Precio</label>
+              <label htmlFor="precio">Precio</label>
               <input
-                id="price"
-                name="price"
+                id="precio"
+                name="precio"
                 type="number"
                 min="0"
                 step="0.01"
-                value={formData.price}
+                value={formData.precio}
                 onChange={handleChange}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="category">Categoría</label>
+              <label htmlFor="categoria">Categoría</label>
               <select
-                id="category"
-                name="category"
-                value={formData.category}
+                id="categoria"
+                name="categoria"
+                value={formData.categoria}
                 onChange={handleChange}
               >
                 {categories.map((cat) => (
@@ -124,12 +127,12 @@ function EditProduct({ productId, navigate }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="image">URL de la imagen</label>
+              <label htmlFor="imagen">URL de la imagen</label>
               <input
-                id="image"
-                name="image"
+                id="imagen"
+                name="imagen"
                 type="text"
-                value={formData.image}
+                value={formData.imagen}
                 onChange={handleChange}
               />
             </div>

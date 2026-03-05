@@ -5,11 +5,11 @@ import useProductStore from '../store/useProductStore'
 import './Administration.css'
 
 const EMPTY_FORM = {
-  name: '',
-  description: '',
-  price: '',
-  category: '',
-  image: '/api/placeholder.co/600×400',
+  nombre: '',
+  descripcion: '',
+  precio: '',
+  categoria: '',
+  imagen: '/api/placeholder.co/600×400',
   stock: '',
 }
 
@@ -36,10 +36,10 @@ function ProductTable({ products, navigate, onDelete }) {
             {products.map((product) => (
               <tr key={product.id}>
                 <td>PAW{String(product.id).padStart(3, '0')}</td>
-                <td>{product.name}</td>
-                <td>${(product.price / 100).toFixed(2)}</td>
+                <td>{product.nombre}</td>
+                <td>${(product.precio / 100).toFixed(2)}</td>
                 <td>
-                  <span className="category-badge">{product.category}</span>
+                  <span className="category-badge">{product.categoria}</span>
                 </td>
                 <td>{product.stock}</td>
                 <td className="admin-actions">
@@ -47,13 +47,13 @@ function ProductTable({ products, navigate, onDelete }) {
                     className="btn-edit"
                     onClick={() => navigate('edit', product.id)}
                   >
-                    Edit
+                    Editar
                   </button>
                   <button
                     className="btn-delete"
                     onClick={() => onDelete(product.id)}
                   >
-                    Delete
+                    Eliminar
                   </button>
                 </td>
               </tr>
@@ -87,8 +87,11 @@ function AddProductForm({ onAdd }) {
     }
 
     onAdd({
-      ...formData,
+      nombre: formData.nombre,
+      descripcion: formData.descripcion,
       precio: Number(formData.precio),
+      categoria: formData.categoria,
+      imagen: formData.imagen,
       stock: Number(formData.stock),
     })
 
@@ -101,24 +104,24 @@ function AddProductForm({ onAdd }) {
       <h2>Agregar nuevo producto</h2>
       <form className="admin-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Nombre</label>
+          <label htmlFor="nombre">Nombre</label>
           <input
-            id="name"
-            name="name"
+            id="nombre"
+            name="nombre"
             type="text"
             placeholder="Nombre del producto"
-            value={formData.name}
+            value={formData.nombre}
             onChange={handleChange}
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Descripción</label>
+          <label htmlFor="descripcion">Descripción</label>
           <textarea
-            id="description"
-            name="description"
-            placeholder="Descripción del producto"
-            value={formData.description}
+            id="descripcion"
+            name="descripcion"
+            placeholder="Descripción detallada del producto"
+            value={formData.descripcion}
             onChange={handleChange}
             rows={3}
           />
@@ -126,39 +129,39 @@ function AddProductForm({ onAdd }) {
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="price">Precio</label>
+            <label htmlFor="precio">Precio</label>
             <input
-              id="price"
-              name="price"
+              id="precio"
+              name="precio"
               type="number"
-              placeholder="0,00"
+              placeholder="0.00"
               min="0"
               step="0.01"
-              value={formData.price}
+              value={formData.precio}
               onChange={handleChange}
             />
           </div>
           <div className="form-group">
-            <label htmlFor="category">Categoría</label>
+            <label htmlFor="categoria">Categoría</label>
             <input
-              id="category"
-              name="category"
+              id="categoria"
+              name="categoria"
               type="text"
               placeholder="Categoría del producto (ej. Alimento, Juguetes)"
-              value={formData.category}
+              value={formData.categoria}
               onChange={handleChange}
             />
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="image">URL de la imagen</label>
+          <label htmlFor="imagen">URL de la imagen</label>
           <input
-            id="image"
-            name="image"
+            id="imagen"
+            name="imagen"
             type="text"
             placeholder="/api/placeholder.co/600×400"
-            value={formData.image}
+            value={formData.imagen}
             onChange={handleChange}
           />
         </div>
