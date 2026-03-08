@@ -1,13 +1,22 @@
+import { useEffect } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { searchProductById } from '../utils/searchProduct'
+import useProductStore from '../store/useProductStore'
 import './Details.css'
 
 function Details({ productId, navigate }) {
-  const producto = searchProductById(productId)
-  
+  const producto = useProductStore((state) =>
+    state.products.find((p) => p.id === productId)
+  )
+
+  useEffect(() => {
+    if (!producto) {
+      navigate('products')
+    }
+  }, [producto, navigate])
+
   if (!producto) {
-    return <div>Producto no encontrado</div>
+    return null
   }
   
   return (

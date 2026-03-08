@@ -1,10 +1,10 @@
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { getAllProducts } from '../utils/searchProduct'
+import useProductStore from '../store/useProductStore'
 import './Products.css'
 
 function Products({ navigate }) {
-  const productos = getAllProducts()
+  const productos = useProductStore((state) => state.products)
   
   return (
     <>

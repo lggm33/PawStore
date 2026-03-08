@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import Details from './pages/Details'
+import Administration from './pages/Administration'
+import EditProduct from './pages/EditProduct'
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -45,6 +47,14 @@ function App() {
   
   if (currentPage === 'details') {
     return <Details productId={currentProductId} navigate={navigate} />
+  }
+
+  if (currentPage === 'administration') {
+    return <Administration navigate={navigate} />
+  }
+
+  if (currentPage === 'edit') {
+    return <EditProduct productId={currentProductId} navigate={navigate} />
   }
 
   return <div>Página no encontrada</div>

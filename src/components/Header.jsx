@@ -28,6 +28,12 @@ function Header({ currentPage, navigate }) {
         >
           Contacto
         </a>
+        <a 
+          onClick={() => navigate('administration')}
+          className="nav-admin-btn"
+        >
+          Administración
+        </a>
       </nav>
     </header>
   )
