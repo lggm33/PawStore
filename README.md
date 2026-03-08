@@ -1,16 +1,84 @@
-# React + Vite
+# PawStore
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tienda en línea de productos para mascotas. Frontend construido con React 19 y Vite 7.
 
-Currently, two official plugins are available:
+## Estado del proyecto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Fase 1 - Estructura base
 
-## React Compiler
+- Layout general: Header con navegación, contenido principal y Footer.
+- Página de inicio con presentación de la tienda.
+- Catálogo de productos con vista en grid.
+- Vista de detalle por producto.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+### Fase 2 - Administración
 
-## Expanding the ESLint configuration
+- Panel de administración con tabla de productos.
+- Formulario para agregar nuevos productos.
+- Edición de productos existentes.
+- Eliminación de productos.
+- Estado gestionado en memoria con Zustand (sin persistencia).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Fase 3 - Integración con backend y autenticación (en desarrollo)
+
+- Conexión con API REST del backend.
+- Reemplazo de datos estáticos por llamadas al servidor.
+- Sistema de autenticación con roles de usuario.
+
+## Stack técnico
+
+| Herramienta | Uso |
+|---|---|
+| React 19 | UI con componentes funcionales |
+| Vite 7 | Bundler y dev server |
+| Zustand | Manejo de estado global |
+| SWC | Compilación rápida de JSX |
+| ESLint 9 | Linting con flat config |
+| vite-plugin-svgr | Importar SVGs como componentes |
+
+## Estructura del proyecto
+
+```
+frontend/
+├── src/
+│   ├── App.jsx              # Routing y layout principal
+│   ├── main.jsx             # Entry point
+│   ├── index.css            # Variables CSS y estilos globales
+│   ├── assets/              # Imágenes y data.json (datos estáticos)
+│   ├── components/          # Header, Footer
+│   ├── pages/               # Home, Products, Details, Administration, EditProduct
+│   └── store/               # Zustand store (useProductStore)
+```
+
+## Rutas
+
+| URL | Página | Descripción |
+|---|---|---|
+| `/` | Home | Bienvenida y presentación |
+| `/products` | Products | Catálogo en grid |
+| `/details?id=X` | Details | Detalle de un producto |
+| `/administration` | Administration | Gestión de productos (tabla + formulario) |
+| `/edit?id=X` | EditProduct | Edición de un producto |
+
+El routing es una implementación custom con `pushState` y `popstate` (sin React Router).
+
+## Datos
+
+Los productos usan campos en español (`nombre`, `descripcion`, `precio`, `categoria`, `imagen`, `stock`). Los precios están en colones costarricenses (₡).
+
+## Inicio rápido
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Scripts disponibles
+
+```
+npm run dev       # Servidor de desarrollo
+npm run build     # Build de producción
+npm run lint      # Ejecutar ESLint
+npm run preview   # Preview del build
+```
