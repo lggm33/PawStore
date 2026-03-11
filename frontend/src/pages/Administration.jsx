@@ -78,7 +78,7 @@ function AddProductForm({ onAdd }) {
     return Object.values(formData).some((val) => val === '' || val === null)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (hasEmptyFields()) {
@@ -86,17 +86,20 @@ function AddProductForm({ onAdd }) {
       return
     }
 
-    onAdd({
-      nombre: formData.nombre,
-      descripcion: formData.descripcion,
-      precio: Number(formData.precio),
-      categoria: formData.categoria,
-      imagen: formData.imagen,
-      stock: Number(formData.stock),
-    })
-
-    setFormData({ ...EMPTY_FORM })
-    setError('')
+    try {
+      await onAdd({
+        nombre: formData.nombre,
+        descripcion: formData.descripcion,
+        precio: Number(formData.precio),
+        categoria: formData.categoria,
+        imagen: formData.imagen,
+        stock: Number(formData.stock),
+      })
+      setFormData({ ...EMPTY_FORM })
+      setError('')
+    } catch {
+      setError('Error al agregar el producto. Intenta de nuevo.')
+    }
   }
 
   return (
