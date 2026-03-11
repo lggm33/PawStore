@@ -42,7 +42,7 @@ function EditProduct({ productId, navigate }) {
     )
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (hasEmptyFields()) {
@@ -50,16 +50,19 @@ function EditProduct({ productId, navigate }) {
       return
     }
 
-    updateProduct(productId, {
-      nombre: formData.nombre,
-      descripcion: formData.descripcion,
-      precio: Number(formData.precio),
-      categoria: formData.categoria,
-      imagen: formData.imagen,
-      stock: Number(formData.stock),
-    })
-
-    navigate('administration')
+    try {
+      await updateProduct(productId, {
+        nombre: formData.nombre,
+        descripcion: formData.descripcion,
+        precio: Number(formData.precio),
+        categoria: formData.categoria,
+        imagen: formData.imagen,
+        stock: Number(formData.stock),
+      })
+      navigate('administration')
+    } catch {
+      setError('Error al guardar los cambios. Intenta de nuevo.')
+    }
   }
 
   const handleCancel = () => {
