@@ -7,18 +7,31 @@ const useProductStore = create((set, get) => ({
   products: [],
   loading: false,
   error: null,
+  initialized: false,
 
   async fetchProducts() {
+    if (get().loading) {
+      return
+    }
+
     set({ loading: true, error: null })
     try {
       const response = await fetch(API_URL)
       const products = await handleResponse(response)
-      set({ products })
+      set({ products, initialized: true })
     } catch (err) {
       set({ error: err.message })
     } finally {
       set({ loading: false })
     }
+  },
+
+  async ensureProducts() {
+    const { initialized, loading } = get()
+    if (initialized || loading) {
+      return
+    }
+    await get().fetchProducts()
   },
 
   async addProduct(productData) {

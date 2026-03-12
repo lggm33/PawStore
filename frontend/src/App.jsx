@@ -11,7 +11,7 @@ import useProductStore from './store/useProductStore'
 import useAuthStore from './store/useAuth'
 
 function App() {
-  const fetchProducts = useProductStore((state) => state.fetchProducts)
+  const ensureProducts = useProductStore((state) => state.ensureProducts)
 
   const [currentPage, setCurrentPage] = useState(() => {
     const path = window.location.pathname.replace('/', '');
@@ -52,8 +52,8 @@ function App() {
   })()
 
   useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+    ensureProducts()
+  }, [ensureProducts])
 
   useEffect(() => {
     const handlePopState = (event) => {

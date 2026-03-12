@@ -20,7 +20,7 @@ function Login({ navigate }) {
       if (response.user.role === 'admin') {
         navigate('administration')
       } else {
-        navigate('home')
+        navigate('products')
       }
     }
   }
