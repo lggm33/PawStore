@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const prisma = require('../database');
 
-let products = require('../data/products.json');
-let nextId = products.length + 1;
-
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+  const products = await prisma.product.findMany();
   res.json(products);
 });
 
-router.get('/:id', (req, res) => {
-  const product = products.find(p => p.id === parseInt(req.params.id));
+router.get('/:id', async (req, res) => {
+  const product = await prisma.product.findUnique({
+    where: { id: parseInt(req.params.id) },
+  });
 
   if (!product) {
     return res.status(404).json({ error: 'Product not found' });
@@ -18,58 +19,55 @@ router.get('/:id', (req, res) => {
   res.json(product);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { nombre, descripcion, precio, categoria, imagen, stock } = req.body;
 
   if (!nombre || !precio || !categoria) {
     return res.status(400).json({ error: 'Missing required fields: nombre, precio, categoria' });
   }
 
-  const newProduct = {
-    id: nextId++,
-    nombre,
-    descripcion: descripcion || '',
-    precio,
-    categoria,
-    imagen: imagen || '',
-    stock: stock || 0,
-  };
+  const newProduct = await prisma.product.create({
+    data: { nombre, descripcion: descripcion || '', precio, categoria, imagen: imagen || '', stock: stock || 0 },
+  });
 
-  products.push(newProduct);
   res.status(201).json(newProduct);
 });
 
-router.put('/:id', (req, res) => {
-  const productIndex = products.findIndex(p => p.id === parseInt(req.params.id));
+router.put('/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+  const existing = await prisma.product.findUnique({ where: { id } });
 
-  if (productIndex === -1) {
+  if (!existing) {
     return res.status(404).json({ error: 'Product not found' });
   }
 
   const { nombre, descripcion, precio, categoria, imagen, stock } = req.body;
 
-  products[productIndex] = {
-    ...products[productIndex],
-    nombre: nombre ?? products[productIndex].nombre,
-    descripcion: descripcion ?? products[productIndex].descripcion,
-    precio: precio ?? products[productIndex].precio,
-    categoria: categoria ?? products[productIndex].categoria,
-    imagen: imagen ?? products[productIndex].imagen,
-    stock: stock ?? products[productIndex].stock,
-  };
+  const updated = await prisma.product.update({
+    where: { id },
+    data: {
+      nombre: nombre ?? existing.nombre,
+      descripcion: descripcion ?? existing.descripcion,
+      precio: precio ?? existing.precio,
+      categoria: categoria ?? existing.categoria,
+      imagen: imagen ?? existing.imagen,
+      stock: stock ?? existing.stock,
+    },
+  });
 
-  res.json(products[productIndex]);
+  res.json(updated);
 });
 
-router.delete('/:id', (req, res) => {
-  const productIndex = products.findIndex(p => p.id === parseInt(req.params.id));
+router.delete('/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+  const existing = await prisma.product.findUnique({ where: { id } });
 
-  if (productIndex === -1) {
+  if (!existing) {
     return res.status(404).json({ error: 'Product not found' });
   }
 
-  const deleted = products.splice(productIndex, 1);
-  res.json(deleted[0]);
+  const deleted = await prisma.product.delete({ where: { id } });
+  res.json(deleted);
 });
 
 module.exports = router;
