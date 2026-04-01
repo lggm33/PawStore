@@ -1,0 +1,29 @@
+// Learn more about Prisma schema: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          Int    @id @default(autoincrement())
+  nombre      String
+  descripcion String @default("")
+  precio      Int
+  categoria   String
+  imagen      String @default("")
+  stock       Int    @default(0)
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  name     String
+  email    String
+  role     String @default("user")
+}
