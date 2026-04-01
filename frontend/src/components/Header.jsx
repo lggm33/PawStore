@@ -1,6 +1,19 @@
 import './Header.css'
 import MainIcon from '../assets/main-icon.svg?react'
+import useAuthStore from '../store/useAuth'
+
 function Header({ currentPage, navigate }) {
+  const { isAuthenticated, user, logout } = useAuthStore()
+
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      logout()
+      navigate('home')
+    } else {
+      navigate('login')
+    }
+  }
+
   return (
     <header className={`header-container`}>
       <div className="header-container-left">
@@ -28,13 +41,21 @@ function Header({ currentPage, navigate }) {
         >
           Contacto
         </a>
+        
+        </nav>
+       
+        <nav className="nav-admin-container">
+
+        {isAuthenticated && <div>Hello {user.name}</div>}
+        {user?.role === 'admin' && <a onClick={() => navigate('administration')}>Administración</a>}
         <a 
-          onClick={() => navigate('administration')}
+          onClick={handleAuthAction}
           className="nav-admin-btn"
         >
-          Administración
+          {isAuthenticated ? 'Cerrar sesión' : 'Iniciar sesión'}
         </a>
-      </nav>
+        
+        </nav>
     </header>
   )
 }
