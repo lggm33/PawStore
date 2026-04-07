@@ -1,72 +1,45 @@
 # PawStore
 
-Tienda en línea de productos para mascotas. Frontend construido con React 19 y Vite 7.
-
-## Estado del proyecto
-
-### Fase 1 - Estructura base
-
-- Layout general: Header con navegación, contenido principal y Footer.
-- Página de inicio con presentación de la tienda.
-- Catálogo de productos con vista en grid.
-- Vista de detalle por producto.
-
-### Fase 2 - Administración
-
-- Panel de administración con tabla de productos.
-- Formulario para agregar nuevos productos.
-- Edición de productos existentes.
-- Eliminación de productos.
-- Estado gestionado en memoria con Zustand (sin persistencia).
-
-### Fase 3 - Integración con backend y autenticación (en desarrollo)
-
-- Conexión con API REST del backend.
-- Reemplazo de datos estáticos por llamadas al servidor.
-- Sistema de autenticación con roles de usuario.
+Tienda en línea de productos para mascotas. SPA completa con React Router, Zustand, autenticación JWT y backend en Express + PostgreSQL en Railway.
 
 ## Stack técnico
 
-| Herramienta | Uso |
-|---|---|
-| React 19 | UI con componentes funcionales |
-| Vite 7 | Bundler y dev server |
-| Zustand | Manejo de estado global |
-| SWC | Compilación rápida de JSX |
-| ESLint 9 | Linting con flat config |
-| vite-plugin-svgr | Importar SVGs como componentes |
+| Capa | Herramienta |
+|------|-------------|
+| Frontend | React 19, Vite 7, React Router v7, Zustand |
+| Backend | Express 5, Prisma ORM, JWT, bcryptjs |
+| Base de datos | PostgreSQL en Railway |
+| Compilación | SWC, ESLint 9 |
 
 ## Estructura del proyecto
 
 ```
-frontend/
-├── src/
-│   ├── App.jsx              # Routing y layout principal
-│   ├── main.jsx             # Entry point
-│   ├── index.css            # Variables CSS y estilos globales
-│   ├── assets/              # Imágenes y data.json (datos estáticos)
-│   ├── components/          # Header, Footer
-│   ├── pages/               # Home, Products, Details, Administration, EditProduct
-│   └── store/               # Zustand store (useProductStore)
+PawStore/
+├── frontend/          # React SPA
+│   └── src/
+│       ├── stores/    # useAuthStore, useCartStore
+│       ├── components/# Header, Footer, PrivateRoute, Layout
+│       └── pages/     # Todas las vistas
+└── backend/           # API REST
+    ├── src/
+    │   ├── config/    # env.js, prisma.js
+    │   ├── middlewares/# authMiddleware, errorHandler
+    │   ├── services/  # authService, orderService
+    │   ├── controllers/# authController, orderController
+    │   └── routes/    # orderRoutes
+    ├── routes/        # productRoutes, authRoutes
+    ├── prisma/
+    │   ├── schema.prisma
+    │   ├── seed.js
+    │   └── migrations/
+    └── server.js
 ```
 
-## Rutas
-
-| URL | Página | Descripción |
-|---|---|---|
-| `/` | Home | Bienvenida y presentación |
-| `/products` | Products | Catálogo en grid |
-| `/details?id=X` | Details | Detalle de un producto |
-| `/administration` | Administration | Gestión de productos (tabla + formulario) |
-| `/edit?id=X` | EditProduct | Edición de un producto |
-
-El routing es una implementación custom con `pushState` y `popstate` (sin React Router).
-
-## Datos
-
-Los productos usan campos en español (`nombre`, `descripcion`, `precio`, `categoria`, `imagen`, `stock`). Los precios están en colones costarricenses (₡).
+---
 
 ## Inicio rápido
+
+### Frontend
 
 ```bash
 cd frontend
@@ -74,11 +47,154 @@ npm install
 npm run dev
 ```
 
+### Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+---
+
+## Configuración del backend
+
+### 1. Variables de entorno
+
+Crear `backend/.env` con las siguientes variables:
+
+```env
+DATABASE_URL=postgresql://<usuario>:<password>@<host>:<puerto>/<db>
+JWT_SECRET=un_secreto_largo_y_aleatorio
+PORT=3000
+```
+
+Para obtener la `DATABASE_URL` del proyecto en Railway:
+
+```bash
+# Primero linkeá el proyecto (solo la primera vez)
+cd backend
+railway link
+# Seleccioná: Lyfter Pawstore → Postgres
+
+# Luego listá las variables
+railway variables
+# Copiá DATABASE_PUBLIC_URL al .env como DATABASE_URL
+```
+
+### 2. Base de datos — Railway CLI
+
+Instalar Railway CLI si no lo tenés:
+
+```bash
+npm install -g @railway/cli
+railway login
+```
+
+#### Linkear el proyecto
+
+```bash
+cd backend
+railway link
+# Seleccioná: Lyfter Pawstore → Postgres
+```
+
+#### Verificar que apunta al proyecto correcto
+
+```bash
+railway status
+# Debe mostrar: Project: Lyfter Pawstore
+```
+
+### 3. Migraciones
+
+```bash
+cd backend
+
+# Primera vez / reset completo (elimina migraciones anteriores)
+rm -rf prisma/migrations
+npx prisma migrate dev --name init
+
+# Aplicar migraciones existentes (en CI o Railway)
+npm run migrate   # alias de: prisma migrate deploy
+
+# Ver estado de migraciones
+npx prisma migrate status
+```
+
+### 4. Seed — cargar datos iniciales
+
+```bash
+cd backend
+node prisma/seed.js
+```
+
+Crea los siguientes usuarios:
+
+| Usuario | Contraseña | Rol |
+|---------|------------|-----|
+| `admin` | `admin123` | admin |
+| `user` | `user123` | user |
+
+### 5. Verificar que el servidor funciona
+
+```bash
+cd backend
+node server.js
+
+# En otra terminal — probar login
+curl -s -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+```
+
+Respuesta esperada:
+```json
+{
+  "token": "eyJ...",
+  "usuario": { "id": 1, "username": "admin", "role": "admin" }
+}
+```
+
+---
+
+## API — Endpoints
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| `POST` | `/api/auth/login` | — | Login, devuelve JWT |
+| `GET` | `/api/products` | — | Lista todos los productos |
+| `GET` | `/api/products/:id` | — | Detalle de un producto |
+| `POST` | `/api/products` | Admin | Crear producto |
+| `PUT` | `/api/products/:id` | Admin | Editar producto |
+| `DELETE` | `/api/products/:id` | Admin | Eliminar producto |
+| `POST` | `/api/orders` | Usuario | Registrar compra |
+
+Las rutas protegidas requieren el header:
+```
+Authorization: Bearer <token>
+```
+
+---
+
 ## Scripts disponibles
 
-```
-npm run dev       # Servidor de desarrollo
+### Frontend
+
+```bash
+npm run dev       # Servidor de desarrollo (con proxy a backend)
 npm run build     # Build de producción
-npm run lint      # Ejecutar ESLint
+npm run lint      # ESLint
 npm run preview   # Preview del build
 ```
+
+### Backend
+
+```bash
+npm run dev       # nodemon server.js
+npm run start     # node server.js
+npm run migrate   # prisma migrate deploy
+npm run seed      # node prisma/seed.js
+```
+
+---

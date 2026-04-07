@@ -1,21 +1,19 @@
+import { Link, useLocation } from 'react-router-dom'
 import './Header.css'
 import MainIcon from '../assets/main-icon.svg?react'
-import useAuthStore from '../store/useAuth'
+import useAuthStore from '../stores/useAuthStore'
+import useCartStore from '../stores/useCartStore'
 
-function Header({ currentPage, navigate }) {
-  const { isAuthenticated, user, logout } = useAuthStore()
+function Header() {
+  const location = useLocation()
+  const { usuario, token, logout } = useAuthStore()
+  const items = useCartStore((state) => state.items)
+  const totalItems = items.reduce((sum, item) => sum + item.cantidad, 0)
 
-  const handleAuthAction = () => {
-    if (isAuthenticated) {
-      logout()
-      navigate('home')
-    } else {
-      navigate('login')
-    }
-  }
+  const isActive = (path) => location.pathname === path ? 'link-active' : ''
 
   return (
-    <header className={`header-container`}>
+    <header className="header-container">
       <div className="header-container-left">
         <div className="header-logo-container">
           <MainIcon className="header-logo" />
@@ -23,39 +21,39 @@ function Header({ currentPage, navigate }) {
         <h1 className="header-title">PawStore</h1>
       </div>
       <nav>
-        <a 
-          onClick={() => navigate('home')}
-          className={currentPage === 'home' ? 'link-active' : ''}
-        >
+        <Link to="/" className={isActive('/')}>
           Inicio
-        </a>
-        <a 
-          onClick={() => navigate('products')}
-          className={currentPage === 'products' || currentPage === 'details' ? 'link-active' : ''}
-        >
+        </Link>
+        <Link to="/productos" className={isActive('/productos')}>
           Productos
-        </a>
-        <a 
-          onClick={() => navigate('contact')}
-          className={currentPage === 'contact' ? 'link-active' : ''}
-        >
+        </Link>
+        <Link to="/contacto" className={isActive('/contacto')}>
           Contacto
-        </a>
-        
-        </nav>
-       
-        <nav className="nav-admin-container">
+        </Link>
+        <Link to="/carrito" className={isActive('/carrito')}>
+          Carrito ({totalItems})
+        </Link>
+      </nav>
 
-        {isAuthenticated && <div>Hello {user.name}</div>}
-        {user?.role === 'admin' && <a onClick={() => navigate('administration')}>Administración</a>}
-        <a 
-          onClick={handleAuthAction}
-          className="nav-admin-btn"
-        >
-          {isAuthenticated ? 'Cerrar sesión' : 'Iniciar sesión'}
-        </a>
-        
-        </nav>
+      <nav className="nav-admin-container">
+        {token && (
+          <div>Hola, {usuario?.username || usuario?.name}</div>
+        )}
+        {token && usuario?.role === 'admin' && (
+          <Link to="/admin" className={isActive('/admin')}>
+            Administración
+          </Link>
+        )}
+        {token ? (
+          <button className="nav-admin-btn" onClick={logout}>
+            Cerrar sesión
+          </button>
+        ) : (
+          <Link to="/login" className="nav-admin-btn">
+            Iniciar sesión
+          </Link>
+        )}
+      </nav>
     </header>
   )
 }

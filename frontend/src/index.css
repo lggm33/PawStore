@@ -4,8 +4,22 @@
   font-weight: 400;
   box-sizing: border-box;
 
+  /* Brand */
   --primary-color: #7F55E0FF;
   --button-action-color: #636AE8FF;
+
+  /* Semantic */
+  --color-danger: #e74c3c;
+  --color-success: #2ecc71;
+
+  /* Text */
+  --color-text: #1a1a2e;
+  --color-text-muted: #666;
+
+  /* Surfaces */
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-border: #e0e0e0;
 }
 
 #root {

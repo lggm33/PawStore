@@ -1,111 +1,46 @@
-import { useState, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import SimpleLayout from './components/SimpleLayout'
+import PrivateRoute from './components/PrivateRoute'
 import Home from './pages/Home'
-import Products from './pages/Products'
-import Details from './pages/Details'
-import Administration from './pages/Administration'
-import EditProduct from './pages/EditProduct'
+import Catalogo from './pages/Catalogo'
+import DetalleProducto from './pages/DetalleProducto'
+import Contacto from './pages/Contacto'
 import Login from './pages/Login'
-import LoginRequired from './pages/LoginRequired'
-import AdminRequired from './pages/AdminRequired'
-import useProductStore from './store/useProductStore'
-import useAuthStore from './store/useAuth'
+import Carrito from './pages/Carrito'
+import Checkout from './pages/Checkout'
+import Confirmacion from './pages/Confirmacion'
+import Administration from './pages/Administration'
+import EditarProducto from './pages/EditarProducto'
+import NotFound from './pages/NotFound'
 
 function App() {
-  const ensureProducts = useProductStore((state) => state.ensureProducts)
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/productos" element={<Catalogo />} />
+        <Route path="/productos/:id" element={<DetalleProducto />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/carrito" element={<Carrito />} />
 
-  const [currentPage, setCurrentPage] = useState(() => {
-    const path = window.location.pathname.replace('/', '');
-    return path || 'home';
-  });
-  const [currentProductId, setCurrentProductId] = useState(null)
+        <Route element={<PrivateRoute role="admin" />}>
+          <Route path="/admin" element={<Administration />} />
+          <Route path="/admin/editar/:id" element={<EditarProducto />} />
+        </Route>
+      </Route>
 
-  const { isAuthenticated, user } = useAuthStore()
-
-  const protectedRoutes = [
-    'products',
-    'details',
-  ]
-
-  const adminRoutes = [
-    'administration',
-    'edit'
-  ]
-
-  const navigate = (page, productId = null) => {
-    setCurrentPage(page)
-    setCurrentProductId(productId)
-    const url = productId ? `/${page}?id=${productId}` : `/${page}`;
-    window.history.pushState({ page, productId }, '', url)
-  }
-
-  const resolvedPage = (() => {
-    const requiresAuth = protectedRoutes.includes(currentPage) || adminRoutes.includes(currentPage)
-    const requiresAdmin = adminRoutes.includes(currentPage)
-
-    if (requiresAuth && !isAuthenticated) {
-      return 'login-required'
-    }
-    if (requiresAdmin && user?.role !== 'admin') {
-      return 'admin-required'
-    }
-    return currentPage
-  })()
-
-  useEffect(() => {
-    ensureProducts()
-  }, [ensureProducts])
-
-  useEffect(() => {
-    const handlePopState = (event) => {
-      if (event.state) {
-        setCurrentPage(event.state.page);
-        setCurrentProductId(event.state.productId);
-      } else {
-        setCurrentPage('home');
-        setCurrentProductId(null);
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-
-
-  if (resolvedPage === 'home') {
-    return <Home navigate={navigate} />
-  }
-  
-  if (resolvedPage === 'products') {
-    return <Products navigate={navigate} />
-  }
-  
-  if (resolvedPage === 'details') {
-    return <Details productId={currentProductId} navigate={navigate} />
-  }
-
-  if (resolvedPage === 'administration') {
-    return <Administration navigate={navigate} />
-  }
-
-  if (resolvedPage === 'edit') {
-    return <EditProduct productId={currentProductId} navigate={navigate} />
-  }
-
-  if (resolvedPage === 'login') {
-    return <Login navigate={navigate} />
-  }
-
-  if (resolvedPage === 'login-required') {
-    return <LoginRequired navigate={navigate} />
-  }
-
-  if (resolvedPage === 'admin-required') {
-    return <AdminRequired navigate={navigate} />
-  }
-
-  return <div>Página no encontrada</div>
+      {/* Rutas con Layout Minimalista */}
+      <Route element={<SimpleLayout />}>
+        <Route element={<PrivateRoute />}>
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/confirmacion" element={<Confirmacion />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  )
 }
 
 export default App
