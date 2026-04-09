@@ -1,14 +1,10 @@
 import { Link } from 'react-router-dom'
-import useCartStore, { selectTotal } from '../stores/useCartStore'
+import { useCart } from '../context/CartContext'
 import { formatPrice } from '../utils/formatPrice'
 import './Carrito.css'
 
 function Carrito() {
-  const items = useCartStore((state) => state.items)
-  const total = useCartStore(selectTotal)
-  const modificarCantidad = useCartStore((state) => state.modificarCantidad)
-  const quitarDelCarrito = useCartStore((state) => state.quitarDelCarrito)
-  const vaciarCarrito = useCartStore((state) => state.vaciarCarrito)
+  const { items, total, modificarCantidad, quitarDelCarrito, vaciarCarrito } = useCart()
 
   if (items.length === 0) {
     return (

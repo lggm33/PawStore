@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
 import './Header.css'
 import MainIcon from '../assets/main-icon.svg?react'
-import useAuthStore from '../stores/useAuthStore'
-import useCartStore from '../stores/useCartStore'
+import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
 
 function Header() {
   const location = useLocation()
-  const { usuario, token, logout } = useAuthStore()
-  const items = useCartStore((state) => state.items)
+  const { usuario, token, logout } = useAuth()
+  const { items } = useCart()
   const totalItems = items.reduce((sum, item) => sum + item.cantidad, 0)
 
   const isActive = (path) => location.pathname === path ? 'link-active' : ''

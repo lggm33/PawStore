@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import useAuthStore from '../stores/useAuthStore'
+import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 import { hasEmptyFields } from '../utils/validateForm'
 import './EditarProducto.css'
@@ -8,7 +8,7 @@ import './EditarProducto.css'
 function EditarProducto() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const token = useAuthStore((state) => state.token)
+  const { token } = useAuth()
 
   const [formData, setFormData] = useState(null)
   const [error, setError] = useState('')

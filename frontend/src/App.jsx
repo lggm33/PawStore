@@ -7,6 +7,7 @@ import Catalogo from './pages/Catalogo'
 import DetalleProducto from './pages/DetalleProducto'
 import Contacto from './pages/Contacto'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Carrito from './pages/Carrito'
 import Checkout from './pages/Checkout'
 import Confirmacion from './pages/Confirmacion'
@@ -23,6 +24,7 @@ function App() {
         <Route path="/productos/:id" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/carrito" element={<Carrito />} />
 
         <Route element={<PrivateRoute role="admin" />}>

@@ -1,5 +1,3 @@
-import useAuthStore from '../stores/useAuthStore'
-
 const API_BASE = '/api'
 
 /**
@@ -20,7 +18,6 @@ function buildHeaders(token) {
  */
 async function handleResponse(res) {
   if (res.status === 401) {
-    useAuthStore.getState().logout()
     throw new Error('Sesión expirada. Por favor iniciá sesión de nuevo.')
   }
 

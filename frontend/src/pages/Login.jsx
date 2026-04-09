@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useAuthStore from '../stores/useAuthStore'
+import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 import './Login.css'
 
@@ -8,7 +8,7 @@ function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
-  const login = useAuthStore((state) => state.login)
+  const { login } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -69,6 +69,10 @@ function Login() {
 
         <button className="login-back" onClick={() => navigate('/')}>
           Volver al inicio
+        </button>
+
+        <button className="login-back" onClick={() => navigate('/register')}>
+          ¿No tienes cuenta? Regístrate
         </button>
       </div>
     </main>

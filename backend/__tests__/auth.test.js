@@ -48,3 +48,34 @@ describe('POST /api/auth/login', () => {
     expect(res.status).toBeDefined();
   });
 });
+
+describe('POST /api/auth/register', () => {
+  it('registra un nuevo usuario correctamente', async () => {
+    const randomSuffix = Math.floor(Math.random() * 1000000);
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ 
+        username: `testuser_${randomSuffix}`, 
+        email: `testuser_${randomSuffix}@example.com`,
+        name: 'Test User',
+        password: 'testPassword123' 
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('token');
+    expect(res.body.usuario.username).toBe(`testuser_${randomSuffix}`);
+  });
+
+  it('falla al registrar un usuario con nombre de usuario existente', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ 
+        username: 'admin', // Asumiendo que 'admin' existe por el seed
+        email: 'admin_duplicate@example.com',
+        name: 'Admin Clone',
+        password: 'testPassword123' 
+      });
+
+    expect(res.status).toBe(409);
+  });
+});

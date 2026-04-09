@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useAuthStore from '../stores/useAuthStore'
-import useCartStore, { selectTotal } from '../stores/useCartStore'
+import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
 import { api } from '../utils/api'
 import { formatPrice } from '../utils/formatPrice'
 import './Checkout.css'
@@ -11,10 +11,8 @@ function Checkout() {
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
-  const token = useAuthStore((state) => state.token)
-  const items = useCartStore((state) => state.items)
-  const total = useCartStore(selectTotal)
-  const vaciarCarrito = useCartStore((state) => state.vaciarCarrito)
+  const { token } = useAuth()
+  const { items, total, vaciarCarrito } = useCart()
 
   const handleSubmit = async (e) => {
     e.preventDefault()

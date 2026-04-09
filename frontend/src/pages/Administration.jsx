@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useAuthStore from '../stores/useAuthStore'
+import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 import { hasEmptyFields } from '../utils/validateForm'
 import './Administration.css'
@@ -191,7 +191,7 @@ function AddProductForm({ onAdd }) {
 function Administration() {
   const [products, setProducts] = useState([])
   const navigate = useNavigate()
-  const token = useAuthStore((state) => state.token)
+  const { token } = useAuth()
 
   useEffect(() => {
     api.get('/products')
