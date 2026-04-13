@@ -69,3 +69,13 @@ nav a.link-active {
   opacity: 0.85;
   color: white !important;
 }
+
+/* SimpleLayout — header centrado sin navegación */
+.header-container--simple {
+  justify-content: center;
+}
+
+.header-container--simple .header-container-left {
+  text-decoration: none;
+  color: inherit;
+}

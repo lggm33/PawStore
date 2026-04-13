@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import useProductStore from '../store/useProductStore'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { api } from '../utils/api'
+import { hasEmptyFields } from '../utils/validateForm'
 import './Administration.css'
 
 const EMPTY_FORM = {
@@ -9,14 +10,13 @@ const EMPTY_FORM = {
   descripcion: '',
   precio: '',
   categoria: '',
-  imagen: '/api/placeholder.co/600×400',
+  imagen: '',
   stock: '',
 }
 
-function ProductTable({ products, navigate, onDelete }) {
+function ProductTable({ products, onEdit, onDelete }) {
   return (
     <section className="admin-section">
-      <h1>Administración de productos</h1>
       <p className="admin-intro">
         En esta sección puedes gestionar el catálogo de productos de PawStore.
       </p>
@@ -37,7 +37,7 @@ function ProductTable({ products, navigate, onDelete }) {
               <tr key={product.id}>
                 <td>PAW{String(product.id).padStart(3, '0')}</td>
                 <td>{product.nombre}</td>
-                <td>${(product.precio / 100).toFixed(2)}</td>
+                <td>₡{product.precio}</td>
                 <td>
                   <span className="category-badge">{product.categoria}</span>
                 </td>
@@ -45,7 +45,7 @@ function ProductTable({ products, navigate, onDelete }) {
                 <td className="admin-actions">
                   <button
                     className="btn-edit"
-                    onClick={() => navigate('edit', product.id)}
+                    onClick={() => onEdit(product.id)}
                   >
                     Editar
                   </button>
@@ -74,14 +74,10 @@ function AddProductForm({ onAdd }) {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const hasEmptyFields = () => {
-    return Object.values(formData).some((val) => val === '' || val === null)
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (hasEmptyFields()) {
+    if (hasEmptyFields(formData)) {
       setError('Por favor completa todos los campos antes de agregar el producto.')
       return
     }
@@ -163,7 +159,7 @@ function AddProductForm({ onAdd }) {
             id="imagen"
             name="imagen"
             type="text"
-            placeholder="/api/placeholder.co/600×400"
+            placeholder="https://ejemplo.com/imagen.jpg"
             value={formData.imagen}
             onChange={handleChange}
           />
@@ -192,24 +188,41 @@ function AddProductForm({ onAdd }) {
   )
 }
 
-function Administration({ navigate }) {
-  const products = useProductStore((state) => state.products)
-  const addProduct = useProductStore((state) => state.addProduct)
-  const deleteProduct = useProductStore((state) => state.deleteProduct)
+function Administration() {
+  const [products, setProducts] = useState([])
+  const navigate = useNavigate()
+  const { token } = useAuth()
+
+  useEffect(() => {
+    api.get('/products')
+      .then(setProducts)
+      .catch(console.error)
+  }, [])
+
+  const handleAdd = async (data) => {
+    const nuevo = await api.post('/products', data, token)
+    setProducts((prev) => [...prev, nuevo])
+  }
+
+  const handleDelete = async (id) => {
+    await api.delete('/products/' + id, token)
+    setProducts((prev) => prev.filter((p) => p.id !== id))
+  }
+
+  const handleEdit = (id) => {
+    navigate('/admin/editar/' + id)
+  }
 
   return (
-    <>
-      <Header currentPage="administration" navigate={navigate} />
-      <main className="administration-container">
-        <ProductTable
-          products={products}
-          navigate={navigate}
-          onDelete={deleteProduct}
-        />
-        <AddProductForm onAdd={addProduct} />
-      </main>
-      <Footer />
-    </>
+    <main className="administration-container">
+      <h1>Administración de productos</h1>
+      <ProductTable
+        products={products}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+      <AddProductForm onAdd={handleAdd} />
+    </main>
   )
 }
 

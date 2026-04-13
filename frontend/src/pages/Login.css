@@ -93,6 +93,10 @@
   color: var(--button-action-color);
   text-decoration: none;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  padding: 0;
 }
 
 .login-back:hover {
