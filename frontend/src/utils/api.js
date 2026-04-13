@@ -24,7 +24,7 @@ async function handleResponse(res) {
   const data = await res.json().catch(() => ({}))
 
   if (!res.ok) {
-    throw new Error(data.error || data.message || 'Error en la solicitud')
+    throw new Error(data.error?.message || data.message || 'Error en la solicitud')
   }
 
   return data

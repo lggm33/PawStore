@@ -31,6 +31,8 @@ function App() {
           <Route path="/admin" element={<Administration />} />
           <Route path="/admin/editar/:id" element={<EditarProducto />} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Route>
 
       {/* Rutas con Layout Minimalista */}
@@ -39,7 +41,6 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/confirmacion" element={<Confirmacion />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )

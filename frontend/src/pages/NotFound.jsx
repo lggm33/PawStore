@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import './NotFound.css'
 
-function NotFound() {
+function NotFound({ message }) {
   return (
     <main className="notfound-container">
       <div className="notfound-icon">
@@ -11,7 +11,7 @@ function NotFound() {
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
         </svg>
       </div>
-      <h1>Página no encontrada</h1>
+      <h1>{message ?? 'Página no encontrada'}</h1>
       <p>La página que estás buscando no existe o ha sido movida.</p>
       <Link to="/" className="notfound-btn">Volver al inicio</Link>
     </main>

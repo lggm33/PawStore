@@ -32,23 +32,20 @@ function loadAuthFromStorage() {
 }
 
 export function AuthProvider({ children }) {
-  const [usuario, setUsuario] = useState(() => loadAuthFromStorage().usuario)
-  const [token, setToken] = useState(() => loadAuthFromStorage().token)
+  const [auth, setAuth] = useState(() => loadAuthFromStorage())
 
   function login(datos, newToken) {
-    setUsuario(datos)
-    setToken(newToken)
+    setAuth({ usuario: datos, token: newToken })
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ usuario: datos, token: newToken }))
   }
 
   function logout() {
-    setUsuario(null)
-    setToken(null)
+    setAuth({ usuario: null, token: null })
     localStorage.removeItem(AUTH_STORAGE_KEY)
   }
 
   return (
-    <AuthContext.Provider value={{ usuario, token, login, logout }}>
+    <AuthContext.Provider value={{ usuario: auth.usuario, token: auth.token, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

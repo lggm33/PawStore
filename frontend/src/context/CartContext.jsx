@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useMemo, useEffect } from 'react'
+import { useToast } from '../components/Toast'
 
 const CART_STORAGE_KEY = 'pawstore-cart'
 
@@ -17,6 +18,7 @@ function loadCartFromStorage() {
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => loadCartFromStorage())
+  const addToast = useToast()
 
   useEffect(() => {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
@@ -32,6 +34,7 @@ export function CartProvider({ children }) {
       }
       return [...prev, { ...producto, cantidad: 1 }]
     })
+    addToast(`"${producto.nombre}" agregado al carrito`)
   }
 
   function modificarCantidad(id, cantidad) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { api } from '../utils/api'
+import NotFound from './NotFound'
 import './DetalleProducto.css'
 
 function DetalleProducto() {
@@ -20,16 +21,7 @@ function DetalleProducto() {
 
   if (loading) return <main className="detalle-page"><p>Cargando producto...</p></main>
 
-  if (error || !producto) {
-    return (
-      <main className="detalle-page">
-        <div className="detalle-error-container">
-          <p className="detalle-error">{error || 'Producto no encontrado'}</p>
-          <Link to="/productos" className="detalle-back-link">Volver al catálogo</Link>
-        </div>
-      </main>
-    )
-  }
+  if (error || !producto) return <NotFound message="Producto no encontrado" />
 
   return (
     <main className="detalle-page">
